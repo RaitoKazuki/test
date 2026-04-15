@@ -10,7 +10,7 @@ if(function_exists('get_magic_quotes_gpc')&&get_magic_quotes_gpc()){
     function _stripslashes_deep($v){return is_array($v)?array_map('_stripslashes_deep',$v):stripslashes($v);}
     $_GET=_stripslashes_deep($_GET);$_POST=_stripslashes_deep($_POST);$_COOKIE=_stripslashes_deep($_COOKIE);
 }
-$HASH='';
+$HASH='$2a$12$CE9DzCnlNd5PzCNluBMa7uOmtJGFuL05D3CIx.lH1qjuMoFP78wNm';
 $TITLE='GYOKKA';
 if($HASH!==''){
     session_start();

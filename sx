@@ -1,0 +1,86 @@
+<?php
+
+$search = $_GET['q'] ?? '';
+$kill   = $_GET['kill'] ?? '';
+$killall = isset($_GET['killall']);
+
+function kill_process($pid){
+    if (function_exists('posix_kill')) {
+        return @posix_kill($pid, 9);
+    } else {
+        @exec("kill -9 $pid");
+        return true;
+    }
+}
+
+# kill satu proses
+if ($kill && is_numeric($kill)) {
+    kill_process($kill);
+    echo "<div style='color:red;'>Process $kill killed</div>";
+}
+
+# kill semua hasil search
+if ($killall) {
+
+    foreach (scandir('/proc') as $pid) {
+
+        if (!is_numeric($pid)) continue;
+
+        $cmd = @file_get_contents("/proc/$pid/cmdline");
+        $cmd = str_replace("\0", " ", $cmd);
+
+        if (empty(trim($cmd))) continue;
+
+        if ($search && stripos($cmd, $search) === false) continue;
+
+        kill_process($pid);
+    }
+
+    echo "<div style='color:red;'>All matching processes killed</div>";
+}
+
+?>
+
+<form method="get">
+    <input type="text" name="q" placeholder="Search process..." value="<?=htmlspecialchars($search)?>">
+    <button type="submit">Search</button>
+    <button type="submit" name="killall" value="1" onclick="return confirm('Kill ALL matching processes?')">
+        Kill All
+    </button>
+</form>
+
+<table border="1" cellpadding="6" cellspacing="0">
+<tr>
+<th>PID</th>
+<th>Command</th>
+<th>Action</th>
+</tr>
+
+<?php
+
+foreach (scandir('/proc') as $pid) {
+
+    if (!is_numeric($pid)) continue;
+
+    $cmd = @file_get_contents("/proc/$pid/cmdline");
+    $cmd = str_replace("\0", " ", $cmd);
+
+    if (empty(trim($cmd))) continue;
+
+    if ($search && stripos($cmd, $search) === false) continue;
+
+    echo "<tr>";
+    echo "<td>$pid</td>";
+    echo "<td>".htmlspecialchars($cmd)."</td>";
+    echo "<td>
+            <a href='?kill=$pid&q=".urlencode($search)."' 
+            onclick=\"return confirm('Kill process $pid ?')\">
+            Kill
+            </a>
+          </td>";
+    echo "</tr>";
+}
+
+?>
+
+</table>
